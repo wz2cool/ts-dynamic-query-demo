@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/wz2cool/ts-dynamic-query-demo#readme",
   "dependencies": {
+    "class-transformer": "^0.1.9",
     "ts-dynamic-query": "^1.0.0"
   }
 }

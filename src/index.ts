@@ -3,6 +3,11 @@ import { data as user2 } from "./data/users2";
 import { data as user3 } from "./data/users3";
 import { data as user4 } from "./data/users4";
 import { data as user5 } from "./data/users5";
+import { data as user6 } from "./data/users6";
+import { data as user7 } from "./data/users7";
+import { data as user8 } from "./data/users8";
+import { data as user9 } from "./data/users9";
+import { data as user10 } from "./data/users10";
 import { User } from "./models/user";
 import {
   DynamicQuery,
@@ -17,7 +22,12 @@ const userObjects = user1
   .concat(user2)
   .concat(user3)
   .concat(user4)
-  .concat(user5);
+  .concat(user5)
+  .concat(user6)
+  .concat(user7)
+  .concat(user8)
+  .concat(user9)
+  .concat(user10);
 const dataStr = JSON.stringify(userObjects);
 const users = User.getUsersFromJSON(dataStr);
 

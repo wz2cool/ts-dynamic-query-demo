@@ -1,4 +1,4 @@
-[{
+const data = [{
   "id": 7001,
   "avatar": "https://s3.amazonaws.com/uifaces/faces/twitter/juaumlol/128.jpg",
   "county": "Essex",
@@ -15999,3 +15999,5 @@
   "words": "commodi excepturi corrupti",
   "sentence": "Molestiae neque et."
 }]
+
+export { data};

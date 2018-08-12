@@ -19,7 +19,7 @@
   "dependencies": {
     "class-transformer": "^0.1.9",
     "lodash": "^4.17.10",
-    "ts-dynamic-query": "^1.0.11"
+    "ts-dynamic-query": "^1.0.12"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.116"

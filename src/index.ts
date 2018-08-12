@@ -14,7 +14,8 @@ import {
   FilterOperator,
   QueryProvider,
   FilterGroupDescriptor,
-  FilterCondition
+  FilterCondition,
+  SortDirection
 } from "ts-dynamic-query";
 import * as lodash from "lodash";
 
@@ -31,64 +32,91 @@ const userObjects = user1
 const dataStr = JSON.stringify(userObjects);
 const users = User.getUsersFromJSON(dataStr);
 
-for (let i = 0; i < 3; i++) {
-  filterUserIdGreaterThan500();
+console.log("total users count: ", users.length);
+for (let i = 0; i < 10; i++) {
+  console.log(
+    `============================== being test ${i +
+      1} =================================`
+  );
+  compare();
 }
 
-function filterUserIdGreaterThan500() {
-  console.log("total users count: ", users.length);
+function compare(): void {
+  const lodashResult = filterByLodash();
+  const dynamicQueryResult = filterByDynamicQuery();
 
+  if (lodashResult.length !== dynamicQueryResult.length) {
+    console.error("filter results are not equal!");
+  }
+
+  for (let i = 0; i < lodashResult.length; i++) {
+    const lodashValue = lodashResult[i];
+    const dynamicValue = dynamicQueryResult[i];
+
+    if (lodashValue.id !== dynamicValue.id) {
+      console.error("item are not equal!");
+    }
+  }
+  console.log("query results are equal");
+}
+
+function filterByDynamicQuery(): User[] {
+  const startTime = new Date();
   const query = new DynamicQuery<User>()
     .addFilter({
       propertyPath: "id",
       operator: FilterOperator.GREATER_THAN,
-      value: 500
+      value: 200
     })
     .addFilter({
       propertyPath: "id",
       operator: FilterOperator.LESS_THAN_OR_EQUAL,
-      value: 800
+      value: 900
     })
     .addFilterGroup({
       options: [
         {
           propertyPath: "firstName",
           operator: FilterOperator.START_WITH,
-          value: "th",
+          value: "t",
           ignoreCase: true
         },
         {
           condition: FilterCondition.OR,
           propertyPath: "firstName",
           operator: FilterOperator.START_WITH,
-          value: "go",
+          value: "g",
           ignoreCase: true
         }
       ]
+    })
+    .addSort({
+      propertyPath: "id",
+      direction: SortDirection.DESC
     });
 
-  const startTime = new Date();
   const result = QueryProvider.query(users, query);
   const endTime = new Date();
+  console.log(
+    "'DynamicQuery' query time: ",
+    endTime.getTime() - startTime.getTime()
+  );
+  return result;
+}
 
-  console.log("after filter user count: ", result.length);
-  console.log("total: ", endTime.getTime() - startTime.getTime());
-
-  const lodashStartTime = new Date();
-  const lodashResult = lodash.filter(users, u => {
+function filterByLodash(): User[] {
+  const startTime = new Date();
+  let result = lodash.filter(users, u => {
     return (
-      u.id > 500 &&
-      u.id <= 800 &&
-      (u.firstName.toLocaleLowerCase().indexOf("th") === 0 ||
-        u.firstName.toLocaleLowerCase().indexOf("go") === 0)
+      u.id > 200 &&
+      u.id <= 900 &&
+      (u.firstName.toLocaleLowerCase().indexOf("t") === 0 ||
+        u.firstName.toLocaleLowerCase().indexOf("g") === 0)
     );
   });
+  result = lodash.orderBy(result, "id", "desc");
+  const endTime = new Date();
 
-  console.log("lodash after filter user count: ", lodashResult.length);
-  const lodashEndTime = new Date();
-
-  console.log(
-    "lodash total: ",
-    lodashEndTime.getTime() - lodashStartTime.getTime()
-  );
+  console.log("'lodash' query time: ", endTime.getTime() - startTime.getTime());
+  return result;
 }

@@ -1,4 +1,5 @@
-import { values } from "./data";
+import { values as user1 } from "./data/user1";
+import { data as user2 } from "./data/users2";
 import { User } from "./models/user";
 import {
   DynamicQuery,
@@ -8,14 +9,15 @@ import {
   FilterCondition
 } from "ts-dynamic-query";
 
-const dataStr = JSON.stringify(values);
+const userObjects = user1.concat(user2);
+const dataStr = JSON.stringify(userObjects);
 const users = User.getUsersFromJSON(dataStr);
 
 filterUserIdGreaterThan500();
 
 function filterUserIdGreaterThan500() {
   console.log("total users count: ", users.length);
-
+  const startTime = new Date();
   const query = new DynamicQuery<User>()
     .addFilter({
       propertyPath: "id",
@@ -46,5 +48,8 @@ function filterUserIdGreaterThan500() {
     });
 
   const result = QueryProvider.query(users, query);
+  const endTime = new Date();
+
   console.log("after filter user count: ", JSON.stringify(result));
+  console.log("total: ", endTime.getTime() - startTime.getTime());
 }
